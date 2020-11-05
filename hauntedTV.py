@@ -182,7 +182,6 @@ while True:
                 print("Ready to Capture new Background")
         elif ord('t') == key:
                 bg = bgHaunted
-                #ref_img = bg
                 print("Image is now haunted!")
 
 
