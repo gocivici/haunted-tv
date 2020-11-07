@@ -5,7 +5,9 @@ import sys
 import RPi.GPIO as GPIO
 
 #timers
-
+timeTV = 5
+timeGhost = 25
+timeNoGhost = 10
 
 
 GPIO.setwarnings(False)
@@ -22,8 +24,6 @@ GPIO.setup(32, GPIO.OUT)# Relay - TV on/off
 
 
 #If you want to use a custom background you can use this function to resize it.
-
-
 def resize(dst,img):
     width = img.shape[1]
     height = img.shape[0]
@@ -97,15 +97,15 @@ while True:
 
                 faceDetectionElapsed=time.time()- faceTimeStart
 
-                if(faceFreqCounter>5) & (not ghostVisible) & (not presenceTriggered):
+                if(faceFreqCounter>timeTV) & (not ghostVisible) & (not presenceTriggered):
                     GPIO.output(32, GPIO.HIGH)
-                if(faceFreqCounter>25) & (faceDetectionElapsed>0.5) & (not ghostVisible):
+                if(faceFreqCounter>timeGhost) & (faceDetectionElapsed>0.5) & (not ghostVisible):
 
                     ghostVisible = True
                     faceFreqCounter=0
                     bg = bgHaunted
 
-                if(ghostVisible & (faceFreqCounter>10) & (faceDetectionElapsed>0.5)) & (not presenceTriggered):
+                if(ghostVisible & (faceFreqCounter>timeNoGhost) & (faceDetectionElapsed>0.5)) & (not presenceTriggered):
                     print("NO GHOST")
                     ghostTime = time.time()
                     ghostVisible = False
@@ -166,7 +166,7 @@ while True:
                 flag = 3
                 print("Setup armed and ready!")
                 GPIO.output(24, GPIO.LOW)
-                GPIO.output(22, GPIO.HIGH)            #turn on TV
+                GPIO.output(22, GPIO.HIGH)
                 GPIO.output(32, GPIO.LOW)
 
         if (ord('h') == key) or (GPIO.input(12) == GPIO.HIGH):
